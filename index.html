@@ -545,6 +545,94 @@ button:active:not(:disabled) { transform: translateY(3px); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+.reward-chip {
+  min-height: 58px;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 3px solid #d6b78e;
+  border-radius: 18px;
+  background: #fff7e9;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 1000;
+}
+.reward-chip span { font-size: 1.65rem; }
+.reward-chip strong { padding: 5px 13px; border-radius: 12px; background: #31bd59; }
+@media (min-width: 641px) {
+  header { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 62px; gap: 16px; }
+  .brand { display: none; }
+  .stats { display: contents; }
+  #levelDisplay { grid-column: 1; justify-self: start; width: min(360px, 96%); }
+  #scoreDisplay { grid-column: 2; justify-self: center; width: min(360px, 96%); }
+  .home-btn { grid-column: 3; justify-self: end; }
+  .scene {
+    background: url("assets/jungle-scene.png") center / 100% 100% no-repeat;
+  }
+  .scene::before, .sun, .cloud, .mountain, .tree, .waterfall, .river,
+  .ground, .path, .scene-label, .ranger, .obstacle { display: none !important; }
+  .prompt-card {
+    top: 5%;
+    left: 26.5%;
+    width: 46.2%;
+    height: 40%;
+    min-height: 170px;
+    padding: 17px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: visible;
+  }
+  .topic {
+    position: relative;
+    min-width: 62%;
+    margin: -7px auto 12px;
+    padding: 7px 20px;
+    border-radius: 28px;
+  }
+  .topic::before {
+    content: "🌳";
+    position: absolute;
+    left: -62px;
+    top: -8px;
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    border: 4px solid #8b552b;
+    border-radius: 50%;
+    background: linear-gradient(#9de2f7 0 54%, #55b956 55%);
+    box-shadow: 0 3px 0 #4b2b18;
+    font-size: 1.8rem;
+  }
+  .prompt-row { flex: 1; }
+  .sentence-container { flex-wrap: nowrap; gap: 16px; }
+  .sentence { font-size: clamp(1.3rem, 2.45vw, 2.35rem); }
+  .audio-btn {
+    flex: 0 0 58px;
+    width: 58px;
+    height: 58px;
+    min-height: 58px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    font-size: 0;
+    border-radius: 50%;
+  }
+  .audio-btn::after { content: "🔊"; font-size: 1.8rem; }
+  .panel { grid-template-columns: minmax(150px, 225px) minmax(340px, 1fr) minmax(205px, 270px); gap: 18px; }
+  .feedback { gap: 8px; }
+  .reward-chip { min-height: 51px; }
+  .status { min-height: 54px; padding: 8px 11px; font-size: .82rem; }
+}
+@media (max-width: 640px) {
+  .reward-chip { display: none; }
+  .audio-btn { font-size: .8rem; }
+  .audio-btn::after { content: none; }
+}
 </style>
 </head>
 <body>
@@ -581,8 +669,8 @@ button:active:not(:disabled) { transform: translateY(3px); }
         <div class="topic">🌳 Tempat di hutan</div>
         <div class="prompt-row">
           <div class="sentence-container">
-            <div class="sentence" id="sentence">Harimau makan daging.</div>
             <button class="audio-btn" id="listenBtn" title="Dengar sebutan contoh">🔊 Dengar Sebutan</button>
+            <div class="sentence" id="sentence">Harimau makan daging.</div>
           </div>
         </div>
       </div>
@@ -593,7 +681,7 @@ button:active:not(:disabled) { transform: translateY(3px); }
     <section class="panel" aria-label="Kawalan permainan">
       <div class="target-card">
         <div class="target-art" id="placeIcon" aria-hidden="true">🐅</div>
-        <div class="target-caption">Haiwan misi</div>
+        <div class="target-caption" id="targetCaption">Harimau</div>
       </div>
 
       <div class="controls">
@@ -606,6 +694,10 @@ button:active:not(:disabled) { transform: translateY(3px); }
       </div>
 
       <div class="feedback">
+        <div class="reward-chip" aria-label="Ganjaran sepuluh markah">
+          <span>🏆</span><strong>+10</strong>
+        </div>
+        
         <div class="status info" id="status" role="status" aria-live="polite">
           <span class="status-icon" id="statusIcon">💡</span>
           <span id="statusText">Sedia untuk bermula! Sebut ayat yang dipaparkan.</span>
@@ -627,15 +719,15 @@ button:active:not(:disabled) { transform: translateY(3px); }
 "use strict";
 
 const sentences = [
-  { text: "Harimau makan daging.", icon: "🐅", obstacle: "🪵" },
-  { text: "Buaya besar di dalam kolam.", icon: "🐊", obstacle: "🌳" },
-  { text: "Arnab melompat di taman.", icon: "🐇", obstacle: "🪨" },
-  { text: "Ikan berenang dalam kolam.", icon: "🐟", obstacle: "🪵" },
-  { text: "Kuda berlari di padang.", icon: "🐎", obstacle: "🌳" },
-  { text: "Itu belalang Ali.", icon: "🦗", obstacle: "🪨" },
-  { text: "Zirafah makan daun.", icon: "🦒", obstacle: "🪵" },
-  { text: "Ikan berenang di dalam sungai.", icon: "🐠", obstacle: "🌳" },
-  { text: "Taman rimba itu berwarna-warni.", icon: "🌴", obstacle: "🪨" }
+  { text: "Harimau makan daging.", icon: "🐅", obstacle: "🪵", label: "Harimau" },
+  { text: "Buaya besar di dalam kolam.", icon: "🐊", obstacle: "🌳", label: "Buaya" },
+  { text: "Arnab melompat di taman.", icon: "🐇", obstacle: "🪨", label: "Arnab" },
+  { text: "Ikan berenang dalam kolam.", icon: "🐟", obstacle: "🪵", label: "Ikan" },
+  { text: "Kuda berlari di padang.", icon: "🐎", obstacle: "🌳", label: "Kuda" },
+  { text: "Itu belalang Ali.", icon: "🦗", obstacle: "🪨", label: "Belalang" },
+  { text: "Zirafah makan daun.", icon: "🦒", obstacle: "🪵", label: "Zirafah" },
+  { text: "Ikan berenang di dalam sungai.", icon: "🐠", obstacle: "🌳", label: "Ikan" },
+  { text: "Taman rimba itu berwarna-warni.", icon: "🌴", obstacle: "🪨", label: "Taman rimba" }
 ];
 
 let currentLevel = 0;
@@ -734,6 +826,7 @@ function renderLevel() {
   $("scoreDisplay").textContent = `⭐ Markah: ${score}`;
   $("sentence").textContent = item.text;
   $("placeIcon").textContent = item.icon;
+  $("targetCaption").textContent = item.label || "Haiwan misi";
   
   obstacle.textContent = item.obstacle;
   obstacle.classList.remove("hit");
@@ -1023,6 +1116,7 @@ nextButton.addEventListener("click", () => {
     // Game Victory State
     $("sentence").textContent = "Tahniah, kamu berjaya melepasi semua halangan!";
     $("placeIcon").textContent = "🏆";
+    $("targetCaption").textContent = "Tahniah!";
     obstacle.textContent = "🎉";
     obstacle.style.opacity = "1";
     ranger.style.left = "72%";
