@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#168b55">
+<title>Pengembaraan Ranger: Jom Sebut!</title>
+<style>
+:root {
+  --green: #187a45;
+  --deep: #124c32;
+  --gold: #ffd45a;
+  --cream: #fff7df;
+  --red: #d84a3b;
+  --blue: #167ed0;
+  --sky-top: #62c8f9;
+  --sky-bottom: #b9ecff;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(180deg, #a3e3ff 0%, #d8f3ff 100%);
+  color: #173c2b;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font: inherit;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 0;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 4px solid #ffbf3f;
+  outline-offset: 3px;
+}
+
+.app {
+  max-width: 1050px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(12px, 3vw, 24px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.brand {
+  font-weight: 900;
+  font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+  color: #155b37;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  background: #fff8df;
+  border: 3px solid #9b6b36;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-weight: 800;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  color: #5c3b27;
+  box-shadow: 0 4px 0 #714b29, 0 6px 10px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.game-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+/* SCENE VISUALS */
+.scene {
+  position: relative;
+  overflow: hidden;
+  border: 6px solid #fff0bd;
+  border-radius: 28px;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 54%, #c9f19a 54%, #64bd57 67%);
+  height: clamp(250px, 42vw, 360px);
+  box-shadow: 0 8px 0 #9a6c39, 0 12px 20px rgba(0,0,0,0.15);
+  isolation: isolate;
+}
+
+.sun {
+  position: absolute;
+  right: 8%;
+  top: 8%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #ffe878;
+  box-shadow: 0 0 0 14px rgba(255, 232, 120, 0.35);
+  animation: pulseSun 4s infinite alternate ease-in-out;
+}
+
+@keyframes pulseSun {
+  0% { transform: scale(1); box-shadow: 0 0 0 12px rgba(255, 232, 120, 0.35); }
+  100% { transform: scale(1.08); box-shadow: 0 0 0 18px rgba(255, 232, 120, 0.25); }
+}
+
+.cloud {
+  position: absolute;
+  top: 14%;
+  width: 100px;
+  height: 28px;
+  border-radius: 30px;
+  background: #fff;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.05));
+}
+.cloud:before, .cloud:after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  bottom: 0;
+}
+.cloud:before { width: 40px; height: 40px; left: 15px; }
+.cloud:after { width: 52px; height: 52px; left: 42px; }
+.c1 { left: 8%; animation: floatCloud 22s linear infinite; }
+.c2 { left: 55%; top: 23%; transform: scale(0.75); animation: floatCloud 28s linear infinite reverse; }
+
+@keyframes floatCloud {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+  100% { transform: translateX(0); }
+}
+
+.mountain {
+  position: absolute;
+  bottom: 31%;
+  width: 0;
+  height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 145px solid #6ba7a0;
+  opacity: 0.8;
+}
+.m1 { left: 5%; }
+.m2 { left: 30%; border-bottom-color: #5d9d8b; transform: scale(1.2); }
+.m3 { right: -2%; border-bottom-color: #8db8a0; }
+
+.tree {
+  position: absolute;
+  bottom: 29%;
+  width: 22px;
+  height: 85px;
+  background: #8b5735;
+  border-radius: 9px;
+}
+.tree:before {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 78px;
+  border-radius: 50%;
+  background: #238e54;
+  left: -29px;
+  top: -38px;
+  box-shadow: 19px -14px 0 #43aa5c, -14px 10px 0 #60bd57;
+}
+.t1 { left: 8%; }
+.t2 { left: 24%; transform: scale(0.8); }
+.t3 { left: 67%; transform: scale(1.1); }
+.t4 { right: 10%; transform: scale(0.85); }
+
+.ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 31%;
+  background: repeating-linear-gradient(90deg, #58ad4c 0 28px, #68c452 28px 53px);
+  border-top: 8px solid #a9e86e;
+}
+
+.path {
+  position: absolute;
+  bottom: 9%;
+  height: 20%;
+  left: 0;
+  right: 0;
+  background: #c99053;
+  border-top: 5px solid #e9c07d;
+  border-bottom: 5px solid #95603a;
+}
+
+.ranger {
+  position: absolute;
+  z-index: 3;
+  left: 6%;
+  bottom: 11%;
+  font-size: clamp(3.2rem, 9vw, 5.5rem);
+  line-height: 1;
+  filter: drop-shadow(0 6px 3px rgba(0,0,0,0.25));
+  transition: left 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scaleX(1);
+}
+.ranger.moving {
+  animation: bounceDrive 0.25s infinite alternate ease-in-out;
+}
+
+.obstacle {
+  position: absolute;
+  z-index: 2;
+  left: 45%;
+  bottom: 11%;
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  line-height: 1;
+  transition: opacity 0.4s, transform 0.4s;
+  filter: drop-shadow(0 4px 2px rgba(0,0,0,0.2));
+}
+.obstacle.hit {
+  animation: shake 0.4s ease-in-out;
+}
+
+.scene-label {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #b67a3d;
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #6a441e;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@keyframes bounceDrive {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-7px) rotate(2deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px) rotate(-5deg); }
+  40% { transform: translateX(10px) rotate(5deg); }
+  60% { transform: translateX(-6px) rotate(-3deg); }
+  80% { transform: translateX(6px) rotate(3deg); }
+}
+
+/* INTERACTION PANEL */
+.panel {
+  background: var(--cream);
+  border: 4px solid #e9c88a;
+  border-radius: 24px;
+  padding: clamp(16px, 3.5vw, 26px);
+  box-shadow: 0 6px 0 #b9874b, 0 10px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.topic {
+  color: #a05b28;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prompt-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0 16px;
+  background: #ffffffa6;
+  padding: 12px 16px;
+  border-radius: 20px;
+  border: 2px dashed #dbc08c;
+}
+
+.place-icon {
+  font-size: clamp(2.5rem, 6vw, 3.2rem);
+  background: #dff4d5;
+  border: 2px solid #a3d991;
+  border-radius: 20px;
+  padding: 8px 14px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sentence-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sentence {
+  font-size: clamp(1.3rem, 4.2vw, 2.1rem);
+  font-weight: 900;
+  line-height: 1.25;
+  color: #163e70;
+  word-break: break-word;
+}
+
+.audio-btn {
+  background: #e1f0ff;
+  border: 2px solid #89bdf2;
+  color: #165ca3;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  width: fit-content;
+  transition: all 0.2s;
+}
+
+.audio-btn:hover {
+  background: #d0e5ff;
+  transform: translateY(-1deg);
+}
+
+.helper {
+  margin: 4px 0 12px;
+  color: #466252;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* CONTROLS & BUTTONS */
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+button {
+  border-radius: 18px;
+  padding: 14px 18px;
+  font-weight: 850;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease-out;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 ease-out !important;
+}
+
+.mic {
+  grid-column: 1 / -1;
+  background: linear-gradient(180deg, #20a4f0 0%, #096bc3 100%);
+  color: white;
+  font-size: clamp(1.1rem, 3vw, 1.25rem);
+  min-height: 72px;
+  box-shadow: 0 6px 0 #07518d, 0 8px 15px rgba(9, 107, 195, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.mic.listening {
+  background: linear-gradient(180deg, #e33d3d 0%, #b81c1c 100%);
+  box-shadow: 0 6px 0 #7e1010, 0 8px 15px rgba(227, 61, 61, 0.4);
+  animation: pulseMic 1.2s infinite alternate;
+}
+
+@keyframes pulseMic {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+.mic:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.retry {
+  background: #e7edf4;
+  color: #27445e;
+  border: 2px solid #b7c3d0;
+  box-shadow: 0 4px 0 #b7c3d0;
+}
+
+.retry:hover:not(:disabled) {
+  background: #dbe4ee;
+}
+
+.next {
+  background: linear-gradient(180deg, #42bd6b 0%, #208846 100%);
+  color: white;
+  box-shadow: 0 4px 0 #12652f, 0 6px 12px rgba(32, 136, 70, 0.25);
+}
+
+.next:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.next:disabled {
+  background: #aeb7bc;
+  box-shadow: 0 4px 0 #818b90;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* STATUS & PROGRESS */
+.status {
+  min-height: 56px;
+  padding: 12px 16px;
+  margin-top: 14px;
+  border-radius: 16px;
+  background: #edf6e9;
+  border: 2px solid #cce2c4;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.status-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.status.good {
+  background: #e0f8e5;
+  border-color: #74ce8a;
+  color: #17632d;
+}
+
+.status.bad {
+  background: #fff0e7;
+  border-color: #f0b29b;
+  color: #8e321f;
+}
+
+.status.info {
+  background: #e9f4ff;
+  border-color: #b1d4f4;
+  color: #184f83;
+}
+
+.progress-wrap {
+  margin-top: 14px;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #6a8275;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress {
+  height: 12px;
+  background: #d8dfd4;
+  border-radius: 99px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress > div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #42bd6b, #2ca75b);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #27523d;
+  font-weight: 600;
+  margin: 18px 4px 8px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* PARTICLES CANVAS */
+#canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* RESPONSIVE LAYOUT */
+@media (min-width: 768px) {
+  .game-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .scene {
+    height: auto;
+    min-height: 400px;
+  }
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mic {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 420px) {
+  .app { padding: 10px; }
+  .pill { font-size: 0.8rem; padding: 6px 10px; }
+  .controls { gap: 8px; }
+  .panel { padding: 14px; }
+  .sentence { font-size: 1.25rem; }
+  .prompt-row { padding: 8px 12px; gap: 10px; }
+  .place-icon { font-size: 2.2rem; padding: 4px 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *:before, *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <span>🌿</span> Pengembaraan Ranger: Jom Sebut!
+    </div>
+    <div class="stats">
+      <div class="pill" id="levelDisplay">Tahap 1 / 9</div>
+      <div class="pill" id="scoreDisplay">⭐ Markah: 0</div>
+    </div>
+  </header>
+
+  <div class="game-layout">
+    <section class="scene" aria-label="Laluan permainan kartun">
+      <canvas id="canvas-overlay"></canvas>
+      <div class="sun"></div>
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="mountain m1"></div>
+      <div class="mountain m2"></div>
+      <div class="mountain m3"></div>
+      <div class="tree t1"></div>
+      <div class="tree t2"></div>
+      <div class="tree t3"></div>
+      <div class="tree t4"></div>
+      <div class="ground"></div>
+      <div class="path"></div>
+      <div class="scene-label">🧭 Misi Sebutan</div>
+      <div class="ranger" id="ranger" aria-label="Ranger menghadap ke kanan">🚙</div>
+      <div class="obstacle" id="obstacle" aria-label="Halangan">🪵</div>
+    </section>
+
+    <section class="panel">
+      <div>
+        <div class="topic">📍 Misi Sebutan Bahasa Melayu</div>
+        <div class="prompt-row">
+          <div class="place-icon" id="placeIcon" aria-hidden="true">🐅</div>
+          <div class="sentence-container">
+            <div class="sentence" id="sentence">Harimau makan daging.</div>
+            <button class="audio-btn" id="listenBtn" title="Dengar sebutan contoh">
+              🔊 Dengar Sebutan
+            </button>
+          </div>
+        </div>
+        <p class="helper">Tekan butang mikrofon, tunggu isyarat “Sedang mendengar”, kemudian sebut ayat dengan jelas.</p>
+      </div>
+
+      <div>
+        <div class="controls">
+          <button class="mic" id="micButton">
+            <span id="micIcon">🎙️</span>
+            <span id="micText">Tekan untuk bercakap</span>
+          </button>
+          <button class="retry" id="retryButton">↻ Cuba Semula</button>
+          <button class="next" id="nextButton" disabled>Tahap Seterusnya →</button>
+        </div>
+
+        <div class="status info" id="status" role="status" aria-live="polite">
+          <span class="status-icon" id="statusIcon">💡</span>
+          <span id="statusText">Sedia untuk bermula! Sebut ayat yang dipaparkan.</span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-text">
+            <span>Kemajuan Misi</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress" aria-label="Kemajuan permainan">
+            <div id="progressBar"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Permainan Latihan Sebutan Bahasa Melayu • Markah +10 Bagi Setiap Sebutan Yang Tepat</footer>
+</div>
+
+<script>
+"use strict";
+
+const sentences = [
+  { text: "Harimau makan daging.", icon: "🐅", obstacle: "🪵" },
+  { text: "Buaya besar di dalam kolam.", icon: "🐊", obstacle: "🌳" },
+  { text: "Arnab melompat di taman.", icon: "🐇", obstacle: "🪨" },
+  { text: "Ikan berenang dalam kolam.", icon: "🐟", obstacle: "🪵" },
+  { text: "Kuda berlari di padang.", icon: "🐎", obstacle: "🌳" },
+  { text: "Itu belalang Ali.", icon: "🦗", obstacle: "🪨" },
+  { text: "Zirafah makan daun.", icon: "🦒", obstacle: "🪵" },
+  { text: "Ikan berenang di dalam sungai.", icon: "🐠", obstacle: "🌳" },
+  { text: "Taman rimba itu berwarna-warni.", icon: "🌴", obstacle: "🪨" }
+];
+
+let currentLevel = 0;
+let score = 0;
+let levelPassed = false;
+let isListening = false;
+let recognition = null;
+let micStream = null;
+
+const $ = id => document.getElementById(id);
+const micButton = $("micButton");
+const retryButton = $("retryButton");
+const nextButton = $("nextButton");
+const listenBtn = $("listenBtn");
+const statusBox = $("status");
+const statusIcon = $("statusIcon");
+const statusText = $("statusText");
+const ranger = $("ranger");
+const obstacle = $("obstacle");
+const canvas = $("canvas-overlay");
+const ctx = canvas.getContext("2d");
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// Resize canvas for particles
+function resizeCanvas() {
+  const scene = document.querySelector('.scene');
+  canvas.width = scene.clientWidth;
+  canvas.height = scene.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 100);
+
+// Particle Effects Engine
+let particles = [];
+function createParticles(x, y) {
+  const colors = ['#ffd45a', '#2ca75b', '#ffffff', '#64bd57', '#ff9f43'];
+  for (let i = 0; i < 35; i++) {
+    particles.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 10,
+      vy: (Math.random() - 0.7) * 10,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      life: 1
+    });
+  }
+}
+
+function updateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.25; // gravity
+    p.alpha -= 0.02;
+    
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.alpha);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    if (p.alpha <= 0) {
+      particles.splice(i, 1);
+    }
+  }
+  if (particles.length > 0) {
+    requestAnimationFrame(updateParticles);
+  }
+}
+
+function triggerSuccessConfetti() {
+  resizeCanvas();
+  createParticles(canvas.width * 0.75, canvas.height * 0.6);
+  requestAnimationFrame(updateParticles);
+}
+
+function setStatus(message, kind = "info") {
+  statusText.textContent = message;
+  statusBox.className = "status " + kind;
+  
+  if (kind === "good") statusIcon.textContent = "🎉";
+  else if (kind === "bad") statusIcon.textContent = "❌";
+  else statusIcon.textContent = "💡";
+}
+
+function renderLevel() {
+  const item = sentences[currentLevel];
+  $("levelDisplay").textContent = `Tahap ${currentLevel + 1} / ${sentences.length}`;
+  $("scoreDisplay").textContent = `⭐ Markah: ${score}`;
+  $("sentence").textContent = item.text;
+  $("placeIcon").textContent = item.icon;
+  
+  obstacle.textContent = item.obstacle;
+  obstacle.classList.remove("hit");
+  obstacle.style.opacity = "1";
+  obstacle.style.transform = "scale(1)";
+  
+  ranger.style.left = "6%";
+  ranger.classList.remove("moving");
+  
+  const pct = Math.round((currentLevel / sentences.length) * 100);
+  $("progressBar").style.width = `${pct}%`;
+  $("progressPercent").textContent = `${pct}%`;
+  
+  levelPassed = false;
+  nextButton.disabled = true;
+  nextButton.classList.remove("hidden");
+  
+  micButton.disabled = false;
+  micButton.classList.remove("listening");
+  $("micIcon").textContent = "🎙️";
+  $("micText").textContent = "Tekan untuk bercakap";
+  
+  retryButton.disabled = false;
+  setStatus("Sedia untuk bermula! Sebut ayat yang dipaparkan.", "info");
+}
+
+function normalize(s) {
+  return s.toLocaleLowerCase("ms-MY")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ").trim();
+}
+
+// Similarity calculator combining word overlap and Levenshtein edit distance
+function similarity(a, b) {
+  a = normalize(a); 
+  b = normalize(b);
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  
+  const aw = a.split(" "), bw = b.split(" ");
+  const common = aw.filter(w => bw.includes(w)).length;
+  const overlap = common / Math.max(aw.length, bw.length);
+  
+  const rows = Array.from({ length: b.length + 1 }, (_, i) => i);
+  let prev = rows;
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(cur[j - 1] + 1, prev[j] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  const edit = 1 - prev[b.length] / Math.max(a.length, b.length);
+  return Math.max(edit, overlap * 0.92);
+}
+
+// Audio synth feedback sound
+function playTone(type) {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.connect(gain); 
+    gain.connect(ctx.destination);
+    const now = ctx.currentTime;
+
+    if (type === "success") {
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+      osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+      osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+      
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.2, now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      
+      osc.start(now); 
+      osc.stop(now + 0.52);
+    } else {
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.setValueAtTime(164.81, now + 0.15);
+      
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.2, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      
+      osc.start(now); 
+      osc.stop(now + 0.36);
+    }
+    osc.onended = () => ctx.close();
+  } catch(e) { 
+    console.warn("Bunyi tidak tersedia:", e); 
+  }
+}
+
+// Text-to-Speech sample generator
+function speakSentence(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ms-MY';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    setStatus("Sistem sebutan suara tidak disokong pada peranti ini.", "bad");
+  }
+}
+
+listenBtn.addEventListener('click', () => {
+  speakSentence(sentences[currentLevel].text);
+});
+
+function passLevel(spoken) {
+  if (levelPassed) return;
+  levelPassed = true;
+  score += 10;
+  
+  $("scoreDisplay").textContent = `⭐ Markah: ${score}`;
+  const pct = Math.round(((currentLevel + 1) / sentences.length) * 100);
+  $("progressBar").style.width = `${pct}%`;
+  $("progressPercent").textContent = `${pct}%`;
+  
+  ranger.classList.add("moving");
+  ranger.style.left = "72%";
+  obstacle.style.opacity = "0.2";
+  obstacle.style.transform = "scale(0.8)";
+  
+  nextButton.disabled = false;
+  micButton.disabled = true;
+  micButton.classList.remove("listening");
+  
+  setStatus(`Hebat! Sebutan diterima: “${spoken}”. (+10 Markah) Tekan “Tahap Seterusnya”.`, "good");
+  playTone("success");
+  triggerSuccessConfetti();
+}
+
+function wrongAnswer(spoken) {
+  ranger.classList.remove("moving");
+  obstacle.classList.remove("hit");
+  void obstacle.offsetWidth; // force reflow for animation restart
+  obstacle.classList.add("hit");
+  
+  setStatus(spoken ? `Belum tepat. Sistem mendengar: “${spoken}”. Sila cuba sebut lagi.` : "Tiada suara dikesan. Sila cuba lagi.", "bad");
+  playTone("fail");
+}
+
+function stopListening() {
+  isListening = false;
+  micButton.disabled = false;
+  micButton.classList.remove("listening");
+  $("micIcon").textContent = "🎙️";
+  $("micText").textContent = "Tekan untuk bercakap";
+}
+
+async function startRecognition() {
+  if (levelPassed || isListening) return;
+
+  if (!SpeechRecognition) {
+    setStatus("Pelayar ini tidak menyokong pengecaman suara. Sila gunakan Google Chrome di komputer atau Android.", "bad");
+    return;
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setStatus("Akses mikrofon tidak tersedia. Sila gunakan sambungan HTTPS yang selamat.", "bad");
+    return;
+  }
+
+  micButton.disabled = true;
+  $("micText").textContent = "Meminta akses mikrofon…";
+
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch(error) {
+    stopListening();
+    setStatus("Sila benarkan akses mikrofon untuk memainkan permainan ini.", "bad");
+    return;
+  }
+
+  micStream.getTracks().forEach(track => track.stop());
+  micStream = null;
+
+  try {
+    recognition = new SpeechRecognition();
+    recognition.lang = "ms-MY";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = function() {
+      isListening = true;
+      micButton.disabled = false;
+      micButton.classList.add("listening");
+      $("micIcon").textContent = "🔴";
+      $("micText").textContent = "Sedang mendengar…";
+      setStatus("Sedang mendengar. Sebut ayat yang dipaparkan sekarang!", "info");
+    };
+
+    recognition.onresult = function(event) {
+      const spoken = event.results && event.results[0] && event.results[0][0]
+        ? event.results[0][0].transcript.trim() : "";
+      const target = sentences[currentLevel].text;
+      const scoreMatch = similarity(spoken, target);
+
+      if (spoken && scoreMatch >= 0.78) {
+        passLevel(spoken);
+      } else {
+        wrongAnswer(spoken);
+      }
+    };
+
+    recognition.onerror = function(event) {
+      console.error("Speech Error:", event.error);
+      stopListening();
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        setStatus("Sila benarkan akses mikrofon dalam tetapan pelayar anda.", "bad");
+      } else if (event.error === "no-speech") {
+        setStatus("Tiada suara dikesan. Sila cuba sebut sekali lagi.", "bad");
+      } else if (event.error === "audio-capture") {
+        setStatus("Mikrofon tidak dapat dikesan. Semak tetapan audio peranti anda.", "bad");
+      } else {
+        setStatus("Pengecaman suara terganggu. Sila cuba lagi.", "bad");
+      }
+    };
+
+    recognition.onend = function() {
+      const wasListening = isListening;
+      stopListening();
+      if (wasListening && !levelPassed && statusText.textContent.startsWith("Sedang mendengar")) {
+        setStatus("Tiada suara dikesan. Sila cuba lagi.", "bad");
+      }
+    };
+
+    recognition.start();
+  } catch(error) {
+    console.error(error);
+    stopListening();
+    setStatus("Gagal memulakan pengecaman suara. Sila cuba lagi.", "bad");
+  }
+}
+
+micButton.addEventListener("click", () => {
+  if (isListening && recognition) {
+    try { recognition.stop(); } catch(e) {}
+    stopListening();
+  } else {
+    startRecognition();
+  }
+});
+
+retryButton.addEventListener("click", () => {
+  if (isListening && recognition) {
+    try { recognition.abort(); } catch(e) {}
+    stopListening();
+  }
+  
+  if (currentLevel === sentences.length - 1 && levelPassed && nextButton.classList.contains("hidden")) {
+    // Restart whole game if completed
+    currentLevel = 0;
+    score = 0;
+    retryButton.textContent = "↻ Cuba Semula";
+    renderLevel();
+    return;
+  }
+
+  if (levelPassed) {
+    setStatus("Tahap ini sudah selesai! Tekan “Tahap Seterusnya” untuk meneruskan.", "info");
+    return;
+  }
+  
+  ranger.style.left = "6%";
+  obstacle.style.opacity = "1";
+  obstacle.style.transform = "scale(1)";
+  setStatus("Cuba lagi! Tekan butang mikrofon dan sebut ayat dengan jelas.", "info");
+});
+
+nextButton.addEventListener("click", () => {
+  if (!levelPassed) return;
+  if (currentLevel < sentences.length - 1) {
+    currentLevel++;
+    renderLevel();
+  } else {
+    // Game Victory State
+    $("sentence").textContent = "Tahniah, kamu berjaya melepasi semua halangan!";
+    $("placeIcon").textContent = "🏆";
+    obstacle.textContent = "🎉";
+    obstacle.style.opacity = "1";
+    ranger.style.left = "72%";
+    
+    micButton.disabled = true;
+    nextButton.disabled = true;
+    nextButton.classList.add("hidden");
+    retryButton.textContent = "↻ Main Semula Permainan";
+    
+    $("progressBar").style.width = "100%";
+    $("progressPercent").textContent = "100%";
+    
+    setStatus(`Semua ayat selesai! Markah akhir kamu ialah ${score}. Syabas, Ranger Cemerlang! 🌟`, "good");
+    playTone("success");
+    triggerSuccessConfetti();
+  }
+});
+
+// Initial Setup
+renderLevel();
+</script>
+</body>
+</html>
